@@ -1,6 +1,6 @@
 FROM alpine:3.14
 
-RUN apk add mosquitto-clients bash
+RUN apk add mosquitto-clients bash iputils-ping
 
 # RUN apt-get update
 # RUN apt-get install -y bash wget
