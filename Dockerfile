@@ -1,6 +1,6 @@
 FROM alpine:3.14
 
-RUN apk install mosquitto-clients
+RUN apk add mosquitto-clients
 
 # RUN apt-get update
 # RUN apt-get install -y bash wget
