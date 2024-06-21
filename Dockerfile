@@ -9,5 +9,7 @@ RUN apk add mosquitto-clients bash iputils
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
+COPY . .
 
 CMD ['/bin/bash', './test_latency.sh']
+
