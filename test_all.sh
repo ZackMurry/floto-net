@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 MQTT_IP="${MQTT_IP:-192.5.87.221}"
 
 LATENCY_TOPIC="${LATENCY_TOPIC:-latency}"
@@ -24,6 +25,12 @@ set -o pipefail
 FAILS=0
 FIRST_FAIL=0
 
+source ./.env.sh
+if [ -z "${MQTT_USER}" ] || [ -z "${MQTT_PASSWORD}" ] ; then
+  echo "Error: MQTT username and/or password not set! Create a .env.sh file to declare MQTT_USER and MQTT_PASSWORD"
+  exit 1
+fi
+
 while true
 do
   printf \\n
@@ -31,7 +38,7 @@ do
 
   LATENCY=$(ping $PING_TARGET -c 3 | tail -1 | awk '{print $4}' | cut -d '/' -f 2)
   if [ $? -eq 0 ] ; then
-    mosquitto_pub -t $LATENCY_TOPIC -m $LATENCY -h $MQTT_IP
+    mosquitto_pub -t $LATENCY_TOPIC -m $LATENCY -h $MQTT_IP -u $MQTT_USER -P $MQTT_PASSWORD
     echo $LATENCY ms to \'$LATENCY_TOPIC\'
   else
     FAILED=1
@@ -40,7 +47,7 @@ do
 
   THROUGHPUT=$(timeout $IPERF_TIMEOUT iperf3 -c $MQTT_IP -t $IPERF_TIME | tail -3 | head -1 | awk '{print $7}')
   if [ $? -eq 0 ] ; then
-    mosquitto_pub -t $THROUGHPUT_TOPIC -m $THROUGHPUT -h $MQTT_IP
+    mosquitto_pub -t $THROUGHPUT_TOPIC -m $THROUGHPUT -h $MQTT_IP -u $MQTT_USER -P $MQTT_PASSWORD
     echo $THROUGHPUT Mbits/sec to \'$THROUGHPUT_TOPIC\'
   else
     FAILED=1
@@ -49,7 +56,7 @@ do
 
   PACKET_LOSS=$(ping $PING_TARGET -c 3 | tail -2 | head -1 | awk '{print $6}' | sed 's/.$//')
   if [ $? -eq 0 ] ; then
-    mosquitto_pub -t $PACKET_LOSS_TOPIC -m $PACKET_LOSS -h $MQTT_IP
+    mosquitto_pub -t $PACKET_LOSS_TOPIC -m $PACKET_LOSS -h $MQTT_IP -u $MQTT_USER -P $MQTT_PASSWORD
     echo $PACKET_LOSS \% to \'$PACKET_LOSS_TOPIC\'
   else
     FAILED=1
@@ -69,7 +76,7 @@ do
       DOWN_TIME=$((CURR_TIME - FIRST_FAIL))
       echo Reconnected after $DOWN_TIME ms and $FAILS fail\(s\)
 
-      mosquitto_pub -t $AVAILABILITY_TOPIC -m $DOWN_TIME -h $MQTT_IP
+      mosquitto_pub -t $AVAILABILITY_TOPIC -m $DOWN_TIME -h $MQTT_IP -u $MQTT_USER -P $MQTT_PASSWORD
       echo $DOWN_TIME ms to \'$AVAILABILITY_TOPIC\'
 
       FIRST_FAIL=0
