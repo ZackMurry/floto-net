@@ -1,7 +1,7 @@
 FROM alpine:3.14
 
 RUN apk update
-RUN apk add mosquitto-clients bash iputils iperf3
+RUN apk add mosquitto-clients bash iputils iputils-ping iperf3
 
 # RUN apt-get update
 # RUN apt-get install -y bash wget

@@ -43,15 +43,8 @@ while true
 do
   printf \\n
   failed=0
-  echo "ping --help"
-  ping --help
-  echo "ping google.com -c 3"
-  ping google.com -c 3
-  echo "ping $PING_TARGET -c 3"
-  ping $PING_TARGET -c 3
-  echo "ping $PING_TARGET -c 3"
 
-  latency=$(ping $PING_TARGET -c 3 | tail -1 | awk '{print $4}' | cut -d '/' -f 2)
+  latency=$(ping -c 3 $PING_TARGET | tail -1 | awk '{print $4}' | cut -d '/' -f 2)
   if [ $? -eq 0 ] ; then
     mosquitto_pub -t $latency_topic -m $latency -h $MQTT_IP -u $MQTT_USER -P $MQTT_PASSWORD
     echo $latency ms to \'$latency_topic\'
@@ -69,7 +62,7 @@ do
     echo "iperf3 failed"
   fi
 
-  packet_loss=$(ping $PING_TARGET -c 3 | tail -2 | head -1 | awk '{print $6}' | sed 's/.$//')
+  packet_loss=$(ping -c 3 $PING_TARGET | tail -2 | head -1 | awk '{print $6}' | sed 's/.$//')
   if [ $? -eq 0 ] ; then
     mosquitto_pub -t $packet_loss_topic -m $packet_loss -h $MQTT_IP -u $MQTT_USER -P $MQTT_PASSWORD
     echo $packet_loss \% to \'$packet_loss_topic\'
