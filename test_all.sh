@@ -45,6 +45,10 @@ do
   failed=0
   echo "ping"
   ping
+  echo "ping google.com"
+  ping google.com
+  echo "ping $PING_TARGET"
+  ping $PING_TARGET
   echo "ping $PING_TARGET -c 3"
 
   latency=$(ping $PING_TARGET -c 3 | tail -1 | awk '{print $4}' | cut -d '/' -f 2)
