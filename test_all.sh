@@ -43,8 +43,8 @@ while true
 do
   printf \\n
   failed=0
-  echo "ping"
-  ping
+  echo "ping --help"
+  ping --help
   echo "ping google.com -c 3"
   ping google.com -c 3
   echo "ping $PING_TARGET -c 3"
