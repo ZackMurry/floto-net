@@ -43,6 +43,7 @@ while true
 do
   printf \\n
   failed=0
+  echo "ping $PING_TARGET -c 3"
 
   latency=$(ping $PING_TARGET -c 3 | tail -1 | awk '{print $4}' | cut -d '/' -f 2)
   if [ $? -eq 0 ] ; then
