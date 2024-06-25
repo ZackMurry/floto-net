@@ -1,5 +1,6 @@
 FROM alpine:3.14
 
+RUN apk update
 RUN apk add mosquitto-clients bash iputils
 
 # RUN apt-get update
@@ -11,4 +12,4 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY . .
 
-CMD "bash ./test_all.sh"
+CMD ["/bin/bash", "/usr/src/app/test_all.sh"]
