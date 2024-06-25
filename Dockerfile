@@ -11,5 +11,4 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY . .
 
-CMD ['/bin/bash', './test_latency.sh']
-
+CMD ['/bin/bash', './test_all.sh']
