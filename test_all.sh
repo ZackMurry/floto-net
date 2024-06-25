@@ -11,6 +11,11 @@ SLEEP_TIME="${SLEEP_TIME:-1s}"
 IPERF_TIME="${IPERF_TIME:-3}"
 IPERF_TIMEOUT=$((IPERF_TIME + 5))
 
+source ./.env.sh
+if [ -z "${MQTT_USER}" ] || [ -z "${MQTT_PASSWORD}" ] ; then
+  echo "Error: MQTT username and/or password not set! Create a .env.sh file to declare MQTT_USER and MQTT_PASSWORD"
+  exit 1
+fi
 
 latency_topic="latency-${DEVICE_NUMBER}"
 throughput_topic="throughput-${DEVICE_NUMBER}"
@@ -33,11 +38,6 @@ set -o pipefail
 fails=0
 first_fail=0
 
-source ./.env.sh
-if [ -z "${MQTT_USER}" ] || [ -z "${MQTT_PASSWORD}" ] ; then
-  echo "Error: MQTT username and/or password not set! Create a .env.sh file to declare MQTT_USER and MQTT_PASSWORD"
-  exit 1
-fi
 
 while true
 do
