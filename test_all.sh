@@ -45,9 +45,9 @@ do
   failed=0
   echo "ping"
   ping
-  echo "ping google.com"
+  echo "ping google.com -c 3"
   ping google.com
-  echo "ping $PING_TARGET"
+  echo "ping $PING_TARGET -c 3"
   ping $PING_TARGET
   echo "ping $PING_TARGET -c 3"
 
