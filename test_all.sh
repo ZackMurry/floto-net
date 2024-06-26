@@ -17,10 +17,10 @@ if [ -z "${MQTT_USER}" ] || [ -z "${MQTT_PASSWORD}" ] ; then
   exit 1
 fi
 
-latency_topic="latency-${DEVICE_NUMBER}"
-throughput_topic="throughput-${DEVICE_NUMBER}"
-packet_loss_topic="packetloss-${DEVICE_NUMBER}"
-downtime_topic="downtime-${DEVICE_NUMBER}"
+latency_topic="latency/${DEVICE_NUMBER}"
+throughput_topic="throughput/${DEVICE_NUMBER}"
+packet_loss_topic="packetloss/${DEVICE_NUMBER}"
+downtime_topic="downtime/${DEVICE_NUMBER}"
 
 echo "MQTT Broker: $MQTT_IP" 
 echo "Iperf3 Server: $MQTT_IP:$IPERF_PORT"
