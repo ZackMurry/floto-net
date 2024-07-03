@@ -1,8 +1,16 @@
 #!/bin/bash
 
+
 # These need to be configured for each client
 IPERF_PORT="${IPERF_PORT:-10001}"
-DEVICE_NUMBER="${DEVICE_NUMBER:-0001}"
+NETWORK_LINK="${NETWORK_LINK:-default}"
+
+DEVICE_UUID="${FLOTO_DEVICE_UUID:-ca4be5128d10378c27dd77e4347d40cd}"
+DEVICE_NUMBER="${DEVICE_UUID: -4}"
+echo $DEVICE_UUID
+echo $DEVICE_NUMBER
+
+
 
 MQTT_IP="${MQTT_IP:-192.5.87.221}"
 
@@ -17,14 +25,15 @@ if [ -z "${MQTT_USER}" ] || [ -z "${MQTT_PASSWORD}" ] ; then
   exit 1
 fi
 
-latency_topic="latency/${DEVICE_NUMBER}"
-throughput_topic="throughput/${DEVICE_NUMBER}"
-packet_loss_topic="packetloss/${DEVICE_NUMBER}"
-downtime_topic="downtime/${DEVICE_NUMBER}"
+latency_topic="network/latency/${DEVICE_NUMBER}/$NETWORK_LINK"
+throughput_topic="network/throughput/${DEVICE_NUMBER}/$NETWORK_LINK"
+packet_loss_topic="network/packetloss/${DEVICE_NUMBER}/$NETWORK_LINK"
+downtime_topic="network/downtime/${DEVICE_NUMBER}/$NETWORK_LINK"
 
-echo "MQTT Broker: $MQTT_IP" 
-echo "Iperf3 Server: $MQTT_IP:$IPERF_PORT"
+echo "MQTT broker: $MQTT_IP" 
+echo "Iperf3 server: $MQTT_IP:$IPERF_PORT"
 echo "Ping target: $PING_TARGET"
+echo "Network link: '$NETWORK_LINK'"
 echo "---------------------------------------"
 echo "Topics:"
 echo "Latency     -> '$latency_topic'"
@@ -32,6 +41,7 @@ echo "Throughput  -> '$throughput_topic'"
 echo "Packet loss -> '$packet_loss_topic'"
 echo "Availability -> '$downtime_topic'"
 echo "---------------------------------------"
+
 
 set -o pipefail
 
@@ -68,7 +78,7 @@ do
     echo $packet_loss \% to \'$packet_loss_topic\'
   else
     failed=1
-    echo "ping failed (PL)"
+    echo "packet loss ping failed"
   fi
 
   if [ $failed -eq 1 ] ; then
@@ -82,7 +92,7 @@ do
     if [ $fails -ne 0 ] ; then
       curr_time=$(date +%s%3N)
       down_time=$((curr_time - first_fail))
-      echo Reconnected after $down_time ms and $fails fail\(s\)
+      echo "Reconnected after $down_time ms and $fails fail\(s\)"
 
       mosquitto_pub -t $downtime_topic -m $down_time -h $MQTT_IP -u $MQTT_USER -P $MQTT_PASSWORD
       echo $down_time ms to \'$downtime_topic\'
