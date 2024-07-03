@@ -9,6 +9,7 @@ if [ -z "${MQTT_USER}" ] || [ -z "${MQTT_PASSWORD}" ] ; then
 fi
 
 mkdir data -p
+mkdir data/throughput data/latency data/packetloss data/downtime -p
 
 mosquitto_sub -h $MQTT_IP -t "#" -u $MQTT_USER -P $MQTT_PASSWORD -v | while read -r message; do
   echo "Message: $message"
