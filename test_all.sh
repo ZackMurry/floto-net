@@ -2,6 +2,15 @@
 
 
 # These need to be configured for each client
+if [ -z $IPERF_PORT ] ; then
+  if [ -v $DEVICE_NUMBER ] ; then
+    $IPERF_PORT=$((10000 + $DEVICE_NUMBER))
+  else
+    #$IPERF_PORT=$((10000 +))
+    # Something idk
+fi
+
+
 IPERF_PORT="${IPERF_PORT:-10001}"
 NETWORK_LINK="${NETWORK_LINK:-default}"
 
