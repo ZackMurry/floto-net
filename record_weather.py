@@ -5,24 +5,27 @@ import paho.mqtt.client as mqtt
 from time import sleep
 
 
-broker = '127.0.0.1'
+broker = 'ara.zackmurry.com'
 port = 80
 topic_prefix = 'weather/'
 client_id = 'ara-weather'
 username = 'zack'
-password = 'password'
+password = 'Caeyah-v6Ahghi2eesho'
 interval = 10
 
 sites = ['AgronomyFarm', 'WilsonHall']
 measurements = [
     'Humidity',
     'PrecipitationCumulative',
-    'PrecipitationDifferential',
+    'RainRate',
     'Pressure',
     'RainRate',
     'Temperature',
     'WindDirection',
     'WindSpeed'
+    'RadarReflectivity',
+    'MORVisibility',
+    'RainIntensity'
 ]
 
 def connect_mqtt():
@@ -89,7 +92,4 @@ if __name__ == '__main__':
 #        print(f'Measurement terminated.')
 #    except Exception as e:
 #        print(f'Exception: {e}')
-
-
-
 
