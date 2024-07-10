@@ -12,11 +12,11 @@ fi
 
 while true
 do
-  lat="42.013684772642655"
-  lon="-93.65109325197827"
+  lat=$(gpspipe -w -n 10 | grep TPV | tail -1 | jq '.lat')
+  lon=$(gpspipe -w -n 10 | grep TPV | tail -1 | jq '.lon')
+  echo "Position: $lat, $lon"
 
   mosquitto_pub -t location/$DEVICE -m "{\"lat\": $lat, \"lon\": $lon}" -h $MQTT_HOST -u $MQTT_USER -P $MQTT_PASSWORD
-  echo "Position: $lat, $lon"
 
   sleep $SLEEP_TIME
 done
