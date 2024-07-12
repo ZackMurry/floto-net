@@ -31,6 +31,7 @@ PING_TARGET="${PING_TARGET:-google.com}"
 SLEEP_TIME="${SLEEP_TIME:-1s}"
 IPERF_TIME="${IPERF_TIME:-3}"
 IPERF_TIMEOUT=$((IPERF_TIME + 5))
+IPERF_TARGET="${IPERF_TARGET:-$MQTT_IP}"
 
 
 latency_topic="network/latency/${DEVICE_NUMBER}/$NETWORK_LINK"
@@ -39,7 +40,7 @@ packet_loss_topic="network/packetloss/${DEVICE_NUMBER}/$NETWORK_LINK"
 downtime_topic="network/downtime/${DEVICE_NUMBER}/$NETWORK_LINK"
 
 echo "MQTT broker: $MQTT_IP" 
-echo "Iperf3 server: $MQTT_IP:$IPERF_PORT"
+echo "Iperf3 server: $IPERF_TARGET:$IPERF_PORT"
 echo "Ping target: $PING_TARGET"
 echo "Network link: '$NETWORK_LINK'"
 echo "---------------------------------------"
@@ -71,7 +72,7 @@ do
     echo "Ping failed!"
   fi
 
-  throughput=$(timeout $IPERF_TIMEOUT iperf3 -c $MQTT_IP -t $IPERF_TIME -p $IPERF_PORT | tail -3 | head -1 | awk '{print $7}')
+  throughput=$(timeout $IPERF_TIMEOUT iperf3 -c $IPERF_TARGET -t $IPERF_TIME -p $IPERF_PORT | tail -3 | head -1 | awk '{print $7}')
   if [ $? -eq 0 ] ; then
     mosquitto_pub -t $throughput_topic -m $throughput -h $MQTT_IP -u $MQTT_USER -P $MQTT_PASSWORD
     echo $throughput Mbits/sec to \'$throughput_topic\'
