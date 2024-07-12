@@ -103,7 +103,7 @@ do
     fi
     fails=$((fails+1))
   else
-    mosquitto_pub -t peer -m "{\"source\": 191, \"target\": 187, \"throughput\": 1000, \"latency\": 6}" -h 192.5.87.221 -P Caeyah-v6Ahghi2eesho -u zack
+    mosquitto_pub -t peer -m "{\"source\": $DEVICE_NUMBER, \"target\": $TARGET_DEVICE, \"throughput\": $throughput, \"latency\": $latency}" -h 192.5.87.221 -P Caeyah-v6Ahghi2eesho -u zack
     if [ $fails -ne 0 ] ; then
       curr_time=$(date +%s%3N)
       down_time=$((curr_time - first_fail))
