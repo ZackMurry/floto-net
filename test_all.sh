@@ -1,14 +1,20 @@
 #!/bin/bash
 
 
-# These need to be configured for each client
-if [ -z $IPERF_PORT ] ; then
-  if [ -v $DEVICE_NUMBER ] ; then
-    $IPERF_PORT=$((10000 + $DEVICE_NUMBER))
-  else
-    #$IPERF_PORT=$((10000 +))
-    # Something idk
+source ./.env.sh
+if [ -z "${MQTT_USER}" ] || [ -z "${MQTT_PASSWORD}" ] ; then
+  echo "Error: MQTT username and/or password not set! Create a .env.sh file to declare MQTT_USER and MQTT_PASSWORD"
+  exit 1
 fi
+
+# These need to be configured for each client
+#if [ -z $IPERF_PORT ] ; then
+#  if [ -v $DEVICE_NUMBER ] ; then
+#    $IPERF_PORT=$((10000 + $DEVICE_NUMBER))
+#  else
+#    #$IPERF_PORT=$((10000 +))
+#    # Something idk
+#fi
 
 
 IPERF_PORT="${IPERF_PORT:-10001}"
@@ -26,11 +32,6 @@ SLEEP_TIME="${SLEEP_TIME:-1s}"
 IPERF_TIME="${IPERF_TIME:-3}"
 IPERF_TIMEOUT=$((IPERF_TIME + 5))
 
-source ./.env.sh
-if [ -z "${MQTT_USER}" ] || [ -z "${MQTT_PASSWORD}" ] ; then
-  echo "Error: MQTT username and/or password not set! Create a .env.sh file to declare MQTT_USER and MQTT_PASSWORD"
-  exit 1
-fi
 
 latency_topic="network/latency/${DEVICE_NUMBER}/$NETWORK_LINK"
 throughput_topic="network/throughput/${DEVICE_NUMBER}/$NETWORK_LINK"
